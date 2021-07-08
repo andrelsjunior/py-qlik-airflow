@@ -19,7 +19,7 @@ i=1
 list_podcast = []
 list_get     = get_podcast(url.format(i))
 
-# Loop com incremento da variável e posterior adição à list_podcast
+# Loop com incremento da variável e posterior adição à variável global list_podcast
 print(f'Foram coletadas: {len(list_get)} entradas na página: {i}.')
 while len(list_get)>0:
     list_podcast += list_get
@@ -31,8 +31,9 @@ while len(list_get)>0:
 list_href = [[ep.text, ep.a['href']] for ep in list_podcast]
 df = pd.DataFrame(columns=['nome', 'link'], data=list_href)
 
-
+# Definindo autenticação e nome do bucket para armazenamento
 client = storage.Client()
 bucket = client.get_bucket('bucketname')
-    
-bucket.blob('filename.extension').upload_from_string(df.to_csv(sep = ';', index=False, encoding = 'UTF-8'), 'text/csv')
+
+# Salvando DataFrame como csv no bucket escolhido
+bucket.blob('filename.csv').upload_from_string(df.to_csv(sep = ';', index=False, encoding = 'UTF-8'), 'text/csv')
