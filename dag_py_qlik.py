@@ -11,18 +11,19 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5)}
+    'retry_delay': timedelta(minutes=5)
+    }
 
-dag = DAG('podcast_dag', schedule_interval="@daily", default_args=default_args)
+
+with DAG(dag_id="podcast_dag", schedule_interval="@daily", default_args=default_args) as dag:    
     
-t1 = BashOperator(
-    task_id='podcasts',
-    bash_command='python /home/airflow/gcs/data/filename',
-    dag=dag)         
+    t1 = BashOperator(
+        task_id='podcasts',
+        bash_command='python /home/airflow/gcs/data/filename.py')      
 
-t2 = BashOperator(
-    task_id='qlik',
-    bash_command='python /home/airflow/gcs/data/filename',
-    dag=dag) 
+    t2 = BashOperator(
+        task_id='qlik',
+        bash_command='python /home/airflow/gcs/data/filename.py')
 
-t1 >> t2
+    t1 >> t2
+
